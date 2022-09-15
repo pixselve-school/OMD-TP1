@@ -30,3 +30,19 @@ UC3 -.-> UC4
 UC3 -.-> UC5
 @enduml
 ```
+
+# Diagrammes de séquence système
+## Réservation sur le site internet 
+```mermaid
+sequenceDiagram
+actor Client
+Client ->> Site internet: Ouverture
+Site internet ->> Client: Liste des films
+Client ->> Site internet: Choix du film
+Site internet ->> Client: Liste des séances
+Client ->> Site internet: Choix de la séance
+Site internet ->> Client: Connexion, incription ou continuer sans compte
+Client ->> Site internet: Choix de ne pas créer de compte
+
+Client ->> Site internet: Choix de ne pas créer de compte
+```
