@@ -74,6 +74,13 @@ critical Validité des données
 end
 end
 
+critical Déjà abonné
+    option Oui
+        Site internet->>Client: Affichage d'un message d'erreur
+        Client->>Site internet: Clic sur "Retour à l'accueil"
+        Site internet->>Client: Affichage de la page d'accueil
+    end
+
 Site internet->>Client: Affichage de la page de souscription à un abonnement Cinépass contenant un formulaire avec les champs suivants : addresse de facturation et IBAN
 Client->>Site internet: Remplissage du formulaire
 Site internet->>Client: Affichage de la page de confirmation de souscription à un abonnement Cinépass
