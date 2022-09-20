@@ -74,17 +74,9 @@ critical Validité des données
 end
 end
 
-Site internet->>Client: Affichage de la page de souscription à un abonnement Cinépass contenant un formulaire avec les champs suivants : addresse de facturation, IBAN, photo d'une pièce d'identité et photo d'un justificatif de domicile
+Site internet->>Client: Affichage de la page de souscription à un abonnement Cinépass contenant un formulaire avec les champs suivants : addresse de facturation et IBAN
 Client->>Site internet: Remplissage du formulaire
 Site internet->>Client: Affichage de la page de confirmation de souscription à un abonnement Cinépass
-Membre du personnel->>Site internet: Vérification des pièces justificatives (sous 72h)
-critical Validité des pièces justificatives
-    option Pièces justificatives incorrectes
-        Membre du personnel->>Site internet: Marque la souscription comme "invalidée"
-        Site internet->>Site internet: Suspension de la souscription
-        Site internet->>Site internet: Envoi d'un email au client avec le motif de l'invalidation
-
-end
 ```
 
 ## Réserver 10 séances à un tarif avantageux (cinécarte)
