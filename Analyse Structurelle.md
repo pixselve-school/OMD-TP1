@@ -16,6 +16,9 @@ classDiagram
         +int size
         +RoomType type
     }
+    
+    Screening "*" o-- "1" Room
+    Screening "*" o-- "1" Movie
 
     class Screening{
         +Movie movie
@@ -23,6 +26,8 @@ classDiagram
         +Room  room
         +int amountReserved
     }
+    
+    Room "*" o-- "1" RoomType
 
     class RoomType{
         <<enumeration>>
@@ -36,6 +41,8 @@ classDiagram
         +ClientInfo info
         +int fidelityPoints
     }
+    
+    Client "1" *-- "1" ClientInfo
 
     class ClientInfo{
         +String firstname
@@ -45,6 +52,8 @@ classDiagram
         +String address
         +Hash password
     }
+    
+    Client "1" -- "0..2" Card
 
     class Card{
         +Client client
@@ -69,12 +78,14 @@ classDiagram
         +Screening[] getScreenings(DateTime date, Movie movie)
         +Movie[] getMovies()
         +boolean bookTickets(String email, Screening screening, Booking[] bookings, paymentInfo paymentInfo)
-        +HashMap getPrices(Screening screening)
+        +HashMap~ReductionType, int~ getPrices(Screening screening)
     }
+    
+    Server "1" o-- "1" Cinema
 
     class Cinema{
-        +HashMap<RoomType, int> prices
-        +HashMap<ReductionType, int> reductions
+        +HashMap~RoomType, int~ prices
+        +HashMap~ReductionType, int~ reductions
         +Room[] rooms
         +Screening[] screenings
         +Card[] cards
@@ -86,6 +97,12 @@ classDiagram
         +void addCard(Card card)
     }
     
+    Cinema "1" *-- "*" Room
+    Cinema "1" *-- "*" Screening
+    Cinema "1" *-- "*" Card
+    Cinema "1" *-- "*" Client
+    Cinema "1" *-- "*" Ticket
+    
     class EmployeeMonitor{
         +Cinema cinema
         +boolean addScreening(Movie movie, DateTime datetime, Room  room)
@@ -93,12 +110,17 @@ classDiagram
         +void changePrice(RoomType roomType, int price)
         +boolean checkValidityTicket(long ticketId)
     }
+    
+    EmployeeMonitor "1" o-- "1" Cinema
 
     class Ticket{
         +long id
         +ReductionType reductionType
         +Screening screening
     }
+    
+    Ticket "*" -- "1" Screening
+    Ticket "*" -- "1" ReductionType
 
     class Booking{
         <<abstract>>
@@ -107,6 +129,8 @@ classDiagram
     class StandardBooking{
         +ReductionType reductionType
     }
+    
+    StandardBooking "*" -- "1" ReductionType
     
     class CardBooking{
         +String id
