@@ -74,7 +74,7 @@ classDiagram
         +boolean createAccount(ClientInfo info)
         -boolean checkAccountExist(String email)
         +boolean login(String email, String password)
-        +boolean buy10TicketsCard(String creditCard, Date expirationdate, int cryptonumber)
+        +boolean buy10TicketsCard(String creditCard, Date expirationdate, int cryptonumber, String tokenClient)
         +Screening[] getScreenings(DateTime date, Movie movie)
         +Movie[] getMovies()
         +boolean bookTickets(String email, Screening screening, Booking[] bookings, paymentInfo paymentInfo)
