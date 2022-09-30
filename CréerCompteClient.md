@@ -47,8 +47,16 @@ end
 ### Diagramme d'Etats :
 ```plantuml
 @startuml
-(*) --> "Tesstt etset"
-"First Action" --> (*)
+start
+-> Client Informations received;
+if (Check if email already exist) then (yes)
+    :Error creating account;
+    :Error message to client;
+    end
+else (no)
+    :Add Client information to the cinema system;
+    :Send success message to client;
+    stop
 @enduml
 ```
 
