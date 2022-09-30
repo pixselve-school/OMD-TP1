@@ -110,6 +110,42 @@ end
 @enduml
 ```
 
+#### Analyse comportementale
+
+```mermaid
+stateDiagram-v2
+
+CheckUserConnected: Vérification de la connexion de l'utilisateur
+VerifyCredentials: Vérification des identifiants
+Connected: Verification de l'abonnement
+SaveIban: Sauvegarde de l'IBAN et création de la carte
+state check_subscribed <<choice>>
+
+[*] --> CheckUserConnected: L'utilisateur clique sur "Souscrire à un abonnement Cinépass"
+state check_connected <<choice>>
+CheckUserConnected --> check_connected
+check_connected --> Connexion : Non connecté
+
+state Connexion {
+    state check_credentials <<choice>>
+    [*] --> VerifyCredentials
+    VerifyCredentials --> check_credentials
+    check_credentials --> VerifyCredentials : Incorrects
+    check_credentials --> [*]: Corrects
+}
+
+check_connected --> Connected: Connecté
+Connexion --> Connected
+Connected --> check_subscribed
+
+
+
+check_subscribed --> [*] : L'utilisateur est déjà abonné
+
+check_subscribed --> SaveIban : L'utilisateur n'est pas abonné
+SaveIban --> [*]
+```
+
 
 ### Changer la grille tarifaire
 
@@ -141,6 +177,16 @@ Site internet de gestion interne->>Membre du personnel: Affichage de la page de 
 CinemaEmployee -> EmployeeMonitor ++ : changePrice(roomType, price)
 return changed successfully
 @enduml
+```
+
+#### Analyse comportementale
+```mermaid
+stateDiagram-v2
+
+ChangePrice: Sauvegarde des nouveaux tarifs
+
+[*] --> ChangePrice: Le membre du personnel change la grille tarifaire
+ChangePrice --> [*]
 ```
 
 ### Gérer la répartition des séances dans les salles
@@ -185,6 +231,24 @@ CinemaEmployee -> EmployeeMonitor ++ : addScreening(movie, datetime, room)
 return screening added successfully
 end
 @enduml
+```
+
+#### Analyse comportementale
+```mermaid
+stateDiagram-v2
+
+AddScreening: Verifie si la salle est disponible à l'horaire indiqué
+SaveScreening: Enregistre la nouvelle séance
+
+[*] --> AddScreening: Le membre du personnel ajoute une séance
+
+state check_room <<choice>>
+AddScreening --> check_room
+check_room --> [*] : Occupée
+
+check_room --> SaveScreening : Disponible
+SaveScreening --> [*]
+
 ```
 
 ### Désabonnement du Cinépass
@@ -244,4 +308,9 @@ end
 Site internet->>Site internet: Enregistrement de la demande de désabonnement
 Site internet->>Site internet: Envoi d'un email de confirmation
 Site internet->>Client: Affichage de la page de confirmation
+```
+
+#### Digramme comportemental
+```mermaid
+
 ```
