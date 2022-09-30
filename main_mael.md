@@ -118,7 +118,7 @@ Le changement de grille tarifaire est effectué par un membre du personnel. Cett
 Ce site n'est accessible que sur le réseau local du cinéma, il ne nécessite pas d'authentification supplémentaire. 
 
 Sur celui-ci, une rubrique "Grille tarifaire" est disponible. 
-Elle permet de modifier les tarifs des différentes catégories de billets. 
+Elle permet de modifier les tarifs en fonction du type de salle (standard, 3D et Dolby) et spécifier les réductions à apporter aux étudiants, aux enfants et aux personnes âgées.
 Ces modifications sont ensuite enregistrées par le serveur et appliquées sur le site web principal.
 
 #### Digramme fonctionnel
@@ -130,7 +130,7 @@ participant Site internet de gestion interne
 Membre du personnel->>Site internet de gestion interne: Ouverture du site
 Site internet de gestion interne->>Membre du personnel: Affichage de la page d'accueil
 Membre du personnel->>Site internet de gestion interne: Clic sur "Changer la grille tarifaire"
-Site internet de gestion interne->>Membre du personnel: Affichage de la page de changement de la grille tarifaire contenant un formulaire avec les champs suivants : tarif normal, tarif réduit, tarif enfant...
+Site internet de gestion interne->>Membre du personnel: Affichage de la page de changement de la grille tarifaire contenant un formulaire avec les champs suivants : type de salle, tarif normal et réductions apportées aux tarifs réduits
 Membre du personnel->>Site internet de gestion interne: Remplissage du formulaire
 Site internet de gestion interne->>Membre du personnel: Affichage de la page de confirmation de changement de la grille tarifaire
 ```
