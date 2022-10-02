@@ -1,7 +1,7 @@
 # TP1 · Conception Orientée-Objet
 ## Mael KERICHARD - Romain BRIEND
 
-L’objectif de ce TD/TP est de préparer un dossier complet d’analyse et de conception par Objet à partir d’un cahier des charges.
+L’objectif de ce TD/TP est de préparer un dossier complet d’analyse et de conception par Objet à partir d’un cahier des charges.
 Ce cahier des charges concerne un système de réservation d'un cinéma.
 
 ## Diagramme de cas d'utilisation
@@ -41,8 +41,8 @@ UC4 -.-> UC8
 
 ## Diagramme de classe
 
-Notre diagramme de classe est orienté autour d'une classe centrale "Cinema". Celle-ci contient la liste des clients, les salles et séances, ainsi que les tickets réservés. Nous avons deux autres classes qui nous servent à manipuler notre système à partir de requete des clients ou des employés. D'une part, il y a "EmployeeMonitor" qui possède toutes les méthodes utiles aux employés pour modifier les tarifs, gérer les séances et pour vérifier la validité d'un ticket. D'autre part,
-nous avons le Server qui reçoit les requetes des clients et fait les vérifications et enregistrement des informations auprès du système.
+Notre diagramme de classe est orienté autour d'une classe centrale "Cinema". Celle-ci contient la liste des clients, les salles et séances, ainsi que les tickets réservés. Nous avons deux autres classes qui nous servent à manipuler notre système à partir de requête des clients ou des employés. D'une part, il y a "EmployeeMonitor" qui possède toutes les méthodes utiles aux employés pour modifier les tarifs, gérer les séances et pour vérifier la validité d'un ticket. D'autre part,
+nous avons le Server qui reçoit les requêtes des clients et fait les vérifications et enregistrement des informations auprès du système.
 
 ```mermaid
 classDiagram
@@ -86,6 +86,7 @@ classDiagram
         +long id
         +ClientInfo info
         +int fidelityPoints
+        +boolean hasUsedBirthdayTicket
         +Card[] cards
     }
     
@@ -208,7 +209,7 @@ classDiagram
 
 ## Diagramme d'Etats
 
-Nous avons donc un diagramme d'états centré autour des clients avec deux états : l'état connecté à un compte, et l'état sans compte. Chaque état permet au client de faire différentes actions, ou de mêmes actions réalisables différemments (réserver un ticket).
+Nous avons donc un diagramme d'états centré autour des clients avec deux états : l'état connecté à un compte, et l'état sans compte. Chaque état permet au client de faire différentes actions, ou de mêmes actions réalisables différemment (réserver un ticket).
 
 ```plantuml
 @startuml
@@ -227,8 +228,8 @@ C1 --> C1 : Réserver une place cinéma (cartes, paiements, points de fidélité
 ### Création d'un compte client
 
 L'utilisateur peut faire le choix de créer un compte client pour le cinéma. Pour cela, il doit se rendre sur le site du cinéma.
-Sur celui-ci, il pourra trouver un bouton pour créer un compte qui l'amenera vers un formulaire de création de compte. Il pourra alors remplir les données utilisées pour la création d'un compte (nom, prénom, email, date de naissance, adresse et son mot de passe).
-Une fois renseignées, ces informations sont envoyés au système et execute la fonction createAccount qui commencera par vérifier que la personne ne possède pas déja un compte. Si elle possède deja un compte, elle lui renverra un message d'erreur. Sinon elle stockera les informations du client comme compte client dans le système.
+Sur celui-ci, il pourra trouver un bouton pour créer un compte qui l'amènera vers un formulaire de création de compte. Il pourra alors remplir les données utilisées pour la création d'un compte (nom, prénom, email, date de naissance, adresse et son mot de passe).
+Une fois renseignées, ces informations sont envoyées au système et exécute la fonction createAccount qui commencera par vérifier que la personne ne possède pas déjà un compte. Si elle possède déjà un compte, elle lui renverra un message d'erreur. Sinon elle stockera les informations du client comme compte client dans le système.
 Le client recevra alors un message de succès.
 
 ```mermaid
@@ -276,14 +277,14 @@ end
 ### Souscrire à un abonnement Cinépass
 
 
-Le client souhaite souscrire à un abonnement Cinépass. Pour ce faire, il doit disposer d'un compte de fidelité.
+Le client souhaite souscrire à un abonnement Cinépass. Pour ce faire, il doit disposer d'un compte client.
 Cette souscription s'effectue sur le site web du cinéma. Avant de procéder, le client doit s'identifier.
 
 Si ce n'est pas déjà le cas, il est invité à rentrer son email et son mot de passe. Ces informations seront envoyées et vérifiées par le serveur. Si les identifiants sont corrects, le client est connecté. Sinon, il est invité à réessayer avec un message d'erreur.
 
 Si le serveur détecte que le compte client est déjà associé à un Cinépass, un message d'erreur est renvoyé au client. Il ne peut pas souscrire à un autre Cinépass sur un même compte.
 
-Une fois connecté, le client peut démarrer le processus de souscription. Pour ce faire, il doit rentrer un IBAN (qui servira à prélever le paiement tous les mois) et une address de facturation. Ces informations seront stockées par le serveur pendant la durée de l'abonnement.
+Une fois connecté, le client peut démarrer le processus de souscription. Pour ce faire, il doit rentrer un IBAN (qui servira à prélever le paiement tous les mois) et une adresse de facturation. Ces informations seront stockées par le serveur pendant la durée de l'abonnement.
 Une fois ces informations rentrées et traitées par le serveur, le client est redirigé vers une page de confirmation de souscription. Il peut alors accéder à son Cinépass.
 
 ```mermaid
@@ -430,11 +431,11 @@ end
 
 ### Réserver 10 séances à un tarif avantageux (cinécarte)
 
-Un client peut faire le choix d'acheter 10 places de cinéma en meme temps pour un prix plus avantageux. Ces places seront assignées à une carte lui permettant de réserver des séances cinémas en renseignant le numéro de carte.
-Pour réserver 10 places, le client doit se rendre sur le site internet. Il peut alors ensuite cliquer sur un bouton "Achat d'une cinécarte". Il est alors invité à se connecter. Cette connexion est requise pour réserver les 10 places. Si il n'a pas de compte, il est invité à un en créer un. Sinon il peut renseigner ses informations de connexions. Le système reçoit ces informations et vérifie bien qu'elles correspondent bien à compte client. Si ce n'est pas le cas, elle renvoie un message d'erreur au client.
-Sinon celui-ci est connecté et la page de paiement s'affiche devant lui. Il peut alors renseigner ses informations de paiements et valider. Les informations de paiements sont envoyés au serveur ainsi qu'un token (qui est généré lorsqu'un client se connecte). Ce token est utile pour reconnaitre quel client fait la requete au serveur.
-Le système vérifie dans un premier temps que le client ne possède pas deja une carte contenant des places, si c'est le cas, il ajoutera 10 places à la carte si les informations de paiement sont corrects. Nous avons fait le choix de ne pas recréer de carte à chaque fois pour que le client puisse conserver toujours la meme carte et la recharger quand il le souhaite.
-Si le client n'a pas de carte, une carte est alors créer avec 10 places dessus. Un message de succès est ensuite envoyé au client pour lui confirmer l'achat. Néanmoins, si le paiement échoue, un message d'erreur lui sera retourner l'invitant à revérifier ses informations de paiements.
+Un client peut faire le choix d'acheter 10 places de cinéma en même temps pour un prix plus avantageux. Ces places seront assignées à une carte lui permettant de réserver des séances cinémas en renseignant le numéro de carte.
+Pour réserver 10 places, le client doit se rendre sur le site internet. Il peut alors ensuite cliquer sur un bouton "Achat d'une cinécarte". Il est alors invité à se connecter. Cette connexion est requise pour réserver les 10 places. S'il n'a pas de compte, il est invité à un en créer un. Sinon il peut renseigner ses informations de connexions. Le système reçoit ces informations et vérifie bien qu'elles correspondent bien à compte client. Si ce n'est pas le cas, elle renvoie un message d'erreur au client.
+Sinon celui-ci est connecté et la page de paiement s'affiche devant lui. Il peut alors renseigner ses informations de paiements et valider. Les informations de paiements sont envoyées au serveur ainsi qu'un token (qui est généré lorsqu'un client se connecte). Ce token est utile pour reconnaître quel client fait la requête au serveur.
+Le système vérifie dans un premier temps que le client ne possède pas déjà une carte contenant des places, si c'est le cas, il ajoutera 10 places à la carte si les informations de paiement sont correctes. Nous avons fait le choix de ne pas recréer de carte à chaque fois pour que le client puisse conserver toujours la même carte et la recharger quand il le souhaite.
+Si le client n'a pas de carte, une carte est alors créer avec 10 places dessus. Un message de succès est ensuite envoyé au client pour lui confirmer l'achat. Néanmoins, si le paiement échoue, un message d'erreur lui sera retourné l'invitant à revérifier ses informations de paiements.
 
 ```mermaid
 sequenceDiagram
@@ -504,22 +505,23 @@ end
 ### Réserver un ticket de cinéma
 
 Pour réserver un ticket de cinéma, un client peut utiliser une borne du cinéma ou alors se rendre sur le site internet. Dans ces deux cas, il peut effectuer la réservation en se connectant à son compte ou pas.
-Dans tous les cas de figures, le client navigue d'une part parmi les films proposés, et ensuite parmi les séances disponibles dans le cinéma. 
+Dans tous les cas de figure, le client navigue d'une part parmi les films proposés, et ensuite parmi les séances disponibles dans le cinéma.
 
-Une fois son choix réalisé, il peut alors se connecter, créer un compte si il n'en a pas ou simplement ignorer la connection.
+Une fois son choix réalisé, il peut alors se connecter, créer un compte s'il n'en a pas ou simplement ignorer la connexion.
 
-Si le client fait le choix de se connecter, le système lui proposera d'utiliser une carte cinépass ou de tickets si il en possède. Si c'est son anniversaire et qu'il n'a pas encore utilisé sa place gratuite il pourra également le faire à cette séance.
-Si son nombre de points de fidélité est assez élevé, il pourra également payer une ou plusieurs places avec ses points. 
+Si le client fait le choix de se connecter, le système lui proposera d'utiliser une carte cinépass ou cinécarte s'il en possède. Si c'est son anniversaire et qu'il n'a pas encore utilisé sa place gratuite, il pourra également le faire à cette séance.
+Si son nombre de points de fidélité est assez élevé, il pourra également payer une ou plusieurs places avec ses points.
+Dans le cas de l'anniversaire, le système vérifie bien que le jour correspond et qu'il ne l'a pas déjà utilisé en vérifiant le booléen "hasUsedBirthdayTicket". (Chaque 1er janvier, ce booléen est remis à false pour tous les clients).
 
-Si il ne se connecte pas, il est invité à entrer un email pour pouvoir recevoir ses places sur celui-ci.
+S'il ne se connecte pas, il est invité à entrer un email pour pouvoir recevoir ses places sur celui-ci.
 
-Une requete est ensuite effectué pour récupérer les prix de la séance (qui dépendent du type de salle).
-Il peut ensuite séléctionner le nombre de place qu'il souhaite, et choisir pour chaque place le moyen de paiement : Carte (en indiquant le numéro de carte si ce n'est pas l'une des siennes), anniversaire, fidélité ou standard).
+Une requête est ensuite effectuée pour récupérer les prix de la séance (qui dépendent du type de salle).
+Il peut ensuite sélectionner le nombre de place qu'il souhaite, et choisir pour chaque place le moyen de paiement : carte (en indiquant le numéro de carte si ce n'est pas l'une des siennes), anniversaire, fidélité ou standard).
 
-Dans le cas d'un paiement standard, il peut choisir une réduction du prix de la séance en fonction du client qui prendra la place (Enfant, Etudiant, Retraité, Sans emploi, Sans réduction). Cette réduction est un pourcentage qui s'applique sur le prix de la séance.
+Dans le cas d'un paiement standard, il peut choisir une réduction du prix de la séance en fonction du client qui prendra la place (Enfant, Étudiant, Retraité, Sans emploi, Sans réduction). Cette réduction est un pourcentage qui s'applique sur le prix de la séance.
 
-Une fois les informations renseignées, une requete est faite au système qui va vérifier la validité des cartes utilisés et/ou de l'utilisation des points de fidélités/place anniversaire. Si il y a un problème, le système renvoie au client les informations qui ne vont pas.
-Le client peut alors modifier son choix puis revalider. Si toutes les informations sont bonnes et que le client doit payer un montant supérieur à 0€, il est invité à payer par carte bancaire (ou espèces sur bornes). Le paiement est ensuite validé (ou non si erreur) et les places sont alors réservés (et crédités des cartes si elles sont utilisées).
+Une fois les informations renseignées, une requête est faite au système qui va vérifier la validité des cartes utilisées et/ou de l'utilisation des points de fidélités/place anniversaire. S'il y a un problème, le système renvoie au client les informations qui ne vont pas.
+Le client peut alors modifier son choix puis revalider. Si toutes les informations sont bonnes et que le client doit payer un montant supérieur à 0€, il est invité à payer par carte bancaire (ou espèces sur les bornes). Le paiement est ensuite validé (ou non si erreur) et les places sont alors réservés (et crédités des cartes si elles sont utilisées).
 
 Les tickets sont ensuite envoyés par mail au client qui a passé la commande.
 
@@ -861,7 +863,7 @@ Le changement de grille tarifaire est effectué par un membre du personnel. Cett
 Ce site n'est accessible que sur le réseau local du cinéma, il ne nécessite pas d'authentification supplémentaire.
 
 Sur celui-ci, une rubrique "Grille tarifaire" est disponible.
-Elle permet de modifier les tarifs en fonction du type de salle (standard, 3D et Dolby) et également modifier les réductions à apporter aux étudiants, aux enfants et aux personnes âgées etc...
+Elle permet de modifier les tarifs en fonction du type de salle (standard, 3D et Dolby) et également de modifier les réductions à apporter aux étudiants, aux enfants et aux personnes âgées etc...
 Ces modifications sont ensuite enregistrées par le serveur et appliquées sur le site web principal.
 
 ```mermaid
@@ -895,10 +897,10 @@ return changed successfully
 ### Vérification des tickets des clients
 
 Avant de pouvoir rentrer dans les salles, les clients doivent passer par un couloir d'accès où un employé du cinéma vérifie leur ticket.
-Pour ce faire, il scan le code barre du ticket et une requete est effectué au système pour récupérer les informations du ticket.
+Pour ce faire, il scan le code-barre du ticket et une requête est effectué au système pour récupérer les informations du ticket.
 
-Si le système ne renvoit aucune information, alors le ticket n'existe pas dans le système et n'est donc pas valide.
-Le ticket peut également être invalide si il est associé à une séance passé ou trop éloigné de la date et heure actuelle.
+Si le système ne renvoie aucune information, alors le ticket n'existe pas dans le système et n'est donc pas valide.
+Le ticket peut également être invalide s'il est associé à une séance passée ou trop éloignée de la date et heure actuelle.
 
 Après un scan de ticket, l'employé peut voir quelle réduction a été appliqué lors de l'achat du ticket et donc demandé une pièce justificative si nécessaire.
 
