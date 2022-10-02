@@ -213,13 +213,28 @@ Nous avons donc un diagramme d'états centré autour des clients avec deux état
 
 ```plantuml
 @startuml
-[*] --> C2
-state "Client avec Compte" as C1
-state "Client sans Compte" as C2
-C1 --> C2 : Deconnexion
-C2 --> C1 : [Client->hasAccount] Connexion
-C2 --> C2 : [Client->!hasAccount] Créer un compte \n - Réserver une place cinéma (cartes, paiements)
-C1 --> C1 : Réserver une place cinéma (cartes, paiements, points de fidélité ou anniversaire) \n - [Client->!hasCinepass] Prendre un abonnement cinépass \n - Acheter une carte 10 tickets \n - [Client->hasCinepass] Se désabonner d'un cinépass
+
+state "Etats Employé" as s{
+    state "Employé" as E
+    [*] --> E
+    E --> E : changer tarif, ajouter séance, vérifier ticket
+    E --> [*]
+}
+
+state "Etats Clients" as t{
+    [*] --> C2
+    state "Client avec Compte" as C1
+    state "Client sans Compte" as C2
+    
+    C1 --> C2 : Deconnexion
+    C2 --> C1 : [Client->hasAccount] Connexion
+    C2 --> C2 : [Client->!hasAccount] Créer un compte \n - Réserver une place cinéma (cartes, paiements)
+    C1 --> C1 : Réserver une place cinéma (cartes, paiements, points de fidélité ou anniversaire) \n - [Client->!hasCinepass] Prendre un abonnement cinépass \n - Acheter une carte 10 tickets \n - [Client->hasCinepass] Se désabonner d'un cinépass
+    C1 -right-> [*]
+    C2 -down-> [*]
+}
+
+
 @enduml
 ```
 
