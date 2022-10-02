@@ -74,22 +74,23 @@ classDiagram
     }
     
     Room "*" o-- "1" RoomType
-
+    
     class RoomType{
         <<enumeration>>
         DOLBY
         3D
         STANDARD
     }
-
+    
     class Client{
         +long id
         +ClientInfo info
         +int fidelityPoints
+        +Card[] cards
     }
     
     Client "1" *-- "1" ClientInfo
-
+    
     class ClientInfo{
         +String firstname
         +String lastname
@@ -102,7 +103,6 @@ classDiagram
     Client "1" -- "0..2" Card
 
     class Card{
-        +Client client
         +String id
     }
 
@@ -204,6 +204,22 @@ classDiagram
         BIRTHDAY
         FIDELITYPOINTS
     }
+```
+
+## Diagramme d'Etats
+
+Nous avons donc un diagramme d'états centré autour des clients avec deux états : l'état connecté à un compte, et l'état sans compte. Chaque état permet au client de faire différentes actions, ou de mêmes actions réalisables différemments (réserver un ticket).
+
+```plantuml
+@startuml
+[*] --> C2
+state "Client avec Compte" as C1
+state "Client sans Compte" as C2
+C1 --> C2 : Deconnexion
+C2 --> C1 : [Client->hasAccount] Connexion
+C2 --> C2 : [Client->!hasAccount] Créer un compte \n - Réserver une place cinéma (cartes, paiements)
+C1 --> C1 : Réserver une place cinéma (cartes, paiements, points de fidélité ou anniversaire) \n - [Client->!hasCinepass] Prendre un abonnement cinépass \n - Acheter une carte 10 tickets \n - [Client->hasCinepass] Se désabonner d'un cinépass
+@enduml
 ```
 
 ## Analyse Fonctionnelle et Comportementale pour chaque cas d'utilisation
