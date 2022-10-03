@@ -224,17 +224,27 @@ state "Etats Employé" as s{
 state "Etats Clients" as t{
     [*] --> C2
     state "Client avec Compte" as C1
-    state "Client sans Compte" as C2
+    state "Client non connecté" as C2
     
     C1 --> C2 : Deconnexion
     C2 --> C1 : [Client->hasAccount] Connexion
-    C2 --> C2 : [Client->!hasAccount] Créer un compte \n - Réserver une place cinéma (cartes, paiements)
-    C1 --> C1 : Réserver une place cinéma (cartes, paiements, points de fidélité ou anniversaire) \n - [Client->!hasCinepass] Prendre un abonnement cinépass \n - Acheter une carte 10 tickets \n - [Client->hasCinepass] Se désabonner d'un cinépass
+    C2 --> C2 : [Client->!hasAccount] Créer un compte \n - Réserver une place
+    C1 --> C1 : Réserver une place \n - [Client->!hasCinepass] Prendre un cinépass \n - Acheter 10 tickets \n - [Client->hasCinepass] Désabonner d'un cinépass
     C1 -right-> [*]
     C2 -down-> [*]
 }
 
-
+state "Etats Séance" as c{
+    [*] --> S2 : Création séance
+    state "Séance Remplie" as S1
+    state "Séance Disponible" as S2
+    state c <<choice>>
+    S1 --> [*] : séance passée
+    S2 --> [*] : séance passée
+    S2 --> c : une place est réservée
+    c --> S2 : [amountReserved < room.size]
+    c --> S1 : [amountReserved == room.size]
+}
 @enduml
 ```
 
