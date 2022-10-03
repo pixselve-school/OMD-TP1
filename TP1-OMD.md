@@ -525,13 +525,15 @@ Dans tous les cas de figure, le client navigue d'une part parmi les films propos
 Une fois son choix réalisé, il peut alors se connecter, créer un compte s'il n'en a pas ou simplement ignorer la connexion.
 
 Si le client fait le choix de se connecter, le système lui proposera d'utiliser une carte cinépass ou cinécarte s'il en possède. Si c'est son anniversaire et qu'il n'a pas encore utilisé sa place gratuite, il pourra également le faire à cette séance.
-Si son nombre de points de fidélité est assez élevé, il pourra également payer une ou plusieurs places avec ses points.
+Si son nombre de points de fidélité est assez élevé, il pourra par ailleurs payer une ou plusieurs places avec ses points.
 Dans le cas de l'anniversaire, le système vérifie bien que le jour correspond et qu'il ne l'a pas déjà utilisé en vérifiant le booléen "hasUsedBirthdayTicket". (Chaque 1er janvier, ce booléen est remis à false pour tous les clients).
 
 S'il ne se connecte pas, il est invité à entrer un email pour pouvoir recevoir ses places sur celui-ci.
 
 Une requête est ensuite effectuée pour récupérer les prix de la séance (qui dépendent du type de salle).
-Il peut ensuite sélectionner le nombre de place qu'il souhaite, et choisir pour chaque place le moyen de paiement : carte (en indiquant le numéro de carte si ce n'est pas l'une des siennes), anniversaire, fidélité ou standard).
+Il peut ensuite sélectionner le nombre de places qu'il souhaite, et choisir pour chaque place le moyen de paiement : carte (en indiquant le numéro de carte si ce n'est pas l'une des siennes), anniversaire, fidélité ou standard).
+
+Si le client souhaite réserver un nombre de places supérieur à celui disponible, un message d'erreur lui est retourné.
 
 Dans le cas d'un paiement standard, il peut choisir une réduction du prix de la séance en fonction du client qui prendra la place (Enfant, Étudiant, Retraité, Sans emploi, Sans réduction). Cette réduction est un pourcentage qui s'applique sur le prix de la séance.
 
@@ -591,6 +593,10 @@ Site internet ->> Client: Liste des tarifs (tarif normal, tarif réduit, tarif e
 
 Client ->> Site internet: Choix du tarif et du nombre de places
 
+alt Le nombre de place souhaité est supérieur à celui disponible
+    Site internet ->> Client: Affichage d'un message d'erreur
+end
+
 alt Si le prix à payer est supérieur à 0 (i.e. si le client n'a pas utilisé son Cinépass ou sa Cinécarte)
     Site internet ->> Client: Demande des informations de paiement
     Client ->> Site internet: Renseignement des informations de paiement
@@ -636,6 +642,12 @@ end
 Site internet ->> Client: Liste des tarifs (tarif normal, tarif réduit, tarif enfant)
 
 Client ->> Site internet: Choix du tarif et du nombre de places
+
+alt Le nombre de place souhaité est supérieur à celui disponible
+    Site internet ->> Client: Affichage d'un message d'erreur
+end
+
+
 alt Si le prix à payer est supérieur à 0 (i.e. si le client n'a pas utilisé sa Cinécarte)
     Site internet ->> Client: Demande des informations de paiement
     Client ->> Site internet: Renseignement des informations de paiement
@@ -676,6 +688,9 @@ end
 Borne ->> Client: Liste des tarifs (tarif normal, tarif réduit, tarif enfant)
 Client ->> Borne: Choix du tarif et du nombre de places
 
+alt Le nombre de place souhaité est supérieur à celui disponible
+    Site internet ->> Client: Affichage d'un message d'erreur
+end
 
 alt Si le prix à payer est supérieur à 0 (i.e. si le client n'a pas utilisé sa Cinécarte)
 
@@ -755,6 +770,12 @@ end
 Site internet ->> Client: Liste des tarifs (tarif normal, tarif réduit, tarif enfant)
 
 Client ->> Borne: Choix du tarif et du nombre de places
+
+alt Le nombre de place souhaité est supérieur à celui disponible
+    Site internet ->> Client: Affichage d'un message d'erreur
+end
+
+
 alt Si le prix à payer est supérieur à 0 (i.e. si le client n'a pas utilisé son Cinépass ou sa Cinécarte)
     Borne ->> Client: Demande le moyen de paiement
     
